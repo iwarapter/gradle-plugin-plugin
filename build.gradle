@@ -1,0 +1,12 @@
+apply plugin: 'groovy'
+
+repositories {
+	jcenter()
+}
+
+dependencies {
+	compile localGroovy()
+	compile gradleApi()
+
+	testCompile 'com.netflix.nebula:nebula-test:2.2.2'
+}
