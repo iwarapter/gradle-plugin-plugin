@@ -13,4 +13,13 @@ class PluginPluginSpec extends PluginProjectSpec {
 	String getPluginName() {
 		return PLUGIN_ID
 	}
+
+	def setup() {
+		project.apply plugin: pluginName
+	}
+
+	def "the plugin has an 'integTest' sourceSet"(){
+		expect:
+		project.tasks.findByName('integTest')
+	}
 }
