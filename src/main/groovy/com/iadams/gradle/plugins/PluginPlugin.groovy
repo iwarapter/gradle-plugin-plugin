@@ -6,6 +6,7 @@ import org.gradle.api.plugins.GroovyPlugin
 import org.gradle.api.tasks.testing.Test
 import org.gradle.testing.jacoco.plugins.JacocoPlugin
 import org.gradle.testing.jacoco.tasks.JacocoReport
+import org.sonarqube.gradle.SonarQubePlugin
 
 /**
  * @author iwarapter
@@ -21,6 +22,8 @@ public class PluginPlugin implements Plugin<Project>  {
 	void apply(Project project) {
 		project.plugins.apply(GroovyPlugin.class)
 		project.plugins.apply(JacocoPlugin.class)
+
+		setupSonarQube(project)
 
 		project.dependencies.add('compile', project.dependencies.gradleApi()) // We are a plugin after all
 		project.dependencies.add('compile', project.dependencies.localGroovy())
@@ -77,5 +80,13 @@ public class PluginPlugin implements Plugin<Project>  {
 		project.test.finalizedBy project.jacocoTestReport
 		project.integTest.finalizedBy project.jacocoIntegTestReport
 		project.integTest.finalizedBy project.jacocoCombinedTestReport
+	}
+
+	void setupSonarQube(Project project){
+		project.plugins.apply(SonarQubePlugin.class)
+
+		def extension = project.extensions.findByName('sonarqube')
+		extension.properties.put('sonar.jacoco.reportPath', "${project.buildDir}/jacoco/test.exec")
+		extension.properties.put('sonar.jacoco.itReportPath', "${project.buildDir}/jacoco/integTest.exec")
 	}
 }

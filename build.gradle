@@ -9,11 +9,14 @@ apply from: "$rootDir/gradle/publishing.gradle"
 
 repositories {
 	jcenter()
+	maven {
+		url "https://plugins.gradle.org/m2/"
+	}
 }
-
 dependencies {
 	compile localGroovy()
 	compile gradleApi()
+	compile "org.sonarqube.gradle:gradle-sonarqube-plugin:1.0"
 
 	testCompile 'com.netflix.nebula:nebula-test:2.2.2'
 }
