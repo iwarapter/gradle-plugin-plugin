@@ -27,6 +27,8 @@ public class PluginPlugin implements Plugin<Project>  {
 
 		project.dependencies.add('compile', project.dependencies.gradleApi()) // We are a plugin after all
 		project.dependencies.add('compile', project.dependencies.localGroovy())
+		project.repositories.maven { url "https://plugins.gradle.org/m2/" }
+		project.buildscript.repositories.maven { url "https://plugins.gradle.org/m2/" }
 
 		if (!project.group) {
 			project.group = 'com.iadams.plugins'

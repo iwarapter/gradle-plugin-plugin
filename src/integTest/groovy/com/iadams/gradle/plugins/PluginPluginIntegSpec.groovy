@@ -1,40 +1,67 @@
 package com.iadams.gradle.plugins
 
-import nebula.test.IntegrationSpec
-import nebula.test.functional.ExecutionResult
+import com.iadams.gradle.plugins.utils.TestKitBaseIntegSpec
+import org.gradle.testkit.runner.GradleRunner
+import spock.lang.Unroll
 
-/**
- * @author iwarapter
- */
-class PluginPluginIntegSpec extends IntegrationSpec {
+import static org.gradle.testkit.runner.TaskOutcome.SUCCESS
 
-	def 'setup new build and check tasks are available'() {
-		setup:
-		buildFile << '''
-                    apply plugin: 'com.iadams.gradle-plugin-plugin'
-                '''.stripIndent()
+class PluginPluginIntegSpec extends TestKitBaseIntegSpec {
 
-		when:
-		ExecutionResult result = runTasksSuccessfully('tasks')
+  @Unroll
+  def "compatible with gradle #gradleVersion"() {
+    setup:
+    writeHelloWorld('com.example')
+    buildFile << """
+			plugins {
+				id 'com.iadams.gradle-plugin-plugin'
+			}
+		"""
 
-		then:
-		result.standardOutput.contains('integTest')
-		result.standardOutput.contains('jacocoTestReport')
-		result.standardOutput.contains('jacocoIntegTestReport')
-	}
+    when:
+    def result = GradleRunner.create()
+        .withProjectDir(testProjectDir.root)
+        .withGradleVersion(gradleVersion)
+        .withArguments('build')
+        .withPluginClasspath(pluginClasspath)
+        .build()
 
-	def "we can run sonarqube"(){
-		given:
-		buildFile << '''
-                    apply plugin: 'com.iadams.gradle-plugin-plugin'
-                '''.stripIndent()
+    then:
+    result.task(':build').outcome == SUCCESS
 
-		when:
-		ExecutionResult result = runTasksWithFailure('sonarqube') //no sonar instance so fail.
+    where:
+    //using the new framework
+    gradleVersion << ['2.8', '2.9']
+  }
 
-		then:
-		result.standardOutput.contains(':sonarqube')
-		result.standardError.contains('Execution failed for task \':sonarqube\'.\n' +
-				'> java.net.ConnectException: Connection refused')
-	}
+  @Unroll
+  def "compatible with legacy gradle #gradleVersion"() {
+    setup:
+    def classpathString = pluginClasspath
+        .collect { it.absolutePath.replace('\\', '\\\\') } // escape backslashes in Windows paths
+        .collect { "'$it'" }
+        .join(", ")
+
+    writeHelloWorld('com.example')
+    buildFile << """apply plugin: 'com.iadams.gradle-plugin-plugin'
+        buildscript {
+            dependencies {
+                classpath files($classpathString)
+            }
+        }"""
+
+    when:
+    def result = GradleRunner.create()
+        .withProjectDir(testProjectDir.root)
+        .withGradleVersion(gradleVersion)
+        .withArguments('build')
+        .build()
+
+    then:
+    result.task(':build').outcome == SUCCESS
+
+    where:
+    //testing the older versions
+    gradleVersion << ['2.5', '2.6', '2.7']
+  }
 }

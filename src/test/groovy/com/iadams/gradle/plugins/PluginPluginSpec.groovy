@@ -1,25 +1,20 @@
 package com.iadams.gradle.plugins
 
-import nebula.test.PluginProjectSpec
+import org.gradle.api.Project
+import org.gradle.testfixtures.ProjectBuilder
 
-/**
- * @author iwarapter
- */
-class PluginPluginSpec extends PluginProjectSpec {
+class PluginPluginSpec extends spock.lang.Specification {
 
-	static final String PLUGIN_ID = 'com.iadams.gradle-plugin-plugin'
+  static final String PLUGIN_ID = 'com.iadams.gradle-plugin-plugin'
+  Project project
 
-	@Override
-	String getPluginName() {
-		return PLUGIN_ID
-	}
+  def setup() {
+    project = ProjectBuilder.builder().build()
+    project.pluginManager.apply PLUGIN_ID
+  }
 
-	def setup() {
-		project.apply plugin: pluginName
-	}
-
-	def "the plugin has an 'integTest' sourceSet"(){
-		expect:
-		project.tasks.findByName('integTest')
-	}
+  def "the plugin has an 'integTest' sourceSet"() {
+    expect:
+    project.tasks.findByName('integTest')
+  }
 }
