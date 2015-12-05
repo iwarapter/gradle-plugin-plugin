@@ -4,6 +4,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.GroovyPlugin
 import org.gradle.api.tasks.testing.Test
+import org.gradle.plugin.devel.plugins.JavaGradlePluginPlugin
 import org.gradle.testing.jacoco.plugins.JacocoPlugin
 import org.gradle.testing.jacoco.tasks.JacocoReport
 import org.sonarqube.gradle.SonarQubePlugin
@@ -22,6 +23,7 @@ public class PluginPlugin implements Plugin<Project>  {
 	void apply(Project project) {
 		project.plugins.apply(GroovyPlugin.class)
 		project.plugins.apply(JacocoPlugin.class)
+    project.plugins.apply(JavaGradlePluginPlugin.class)
 
 		setupSonarQube(project)
 
