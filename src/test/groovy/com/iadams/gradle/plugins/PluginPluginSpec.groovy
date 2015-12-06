@@ -26,7 +26,7 @@ class PluginPluginSpec extends Specification {
     project.tasks.findByName(task)
 
     where:
-    task << ['integTest', 'jacocoTestReport', 'jacocoIntegTestReport', 'sonarqube']
+    task << ['integTest', 'jacocoTestReport', 'jacocoIntegTestReport', 'sonarqube', 'publishPlugins']
   }
 
   def "has correct sourceSets"() {

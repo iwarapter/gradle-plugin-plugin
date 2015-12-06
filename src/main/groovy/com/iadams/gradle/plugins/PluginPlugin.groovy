@@ -1,6 +1,7 @@
 package com.iadams.gradle.plugins
 
-import com.iadams.gradle.plugins.tasks.SetupPluginTask;
+import com.gradle.publish.PublishPlugin
+import com.iadams.gradle.plugins.tasks.SetupPluginTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.GroovyPlugin
@@ -13,39 +14,39 @@ import org.sonarqube.gradle.SonarQubePlugin
 /**
  * @author iwarapter
  */
-public class PluginPlugin implements Plugin<Project>  {
+public class PluginPlugin implements Plugin<Project> {
 
   static final SETUP_PLUGIN_TASK = 'setupPlugin'
 
-	/**
-	 * Applies BasePlugin to the project and add the tasks and extensions.
-	 * @param project
-	 * 	Gradle Project Object
-	 */
-	@Override
-	void apply(Project project) {
-		project.plugins.apply(GroovyPlugin.class)
-		project.plugins.apply(JacocoPlugin.class)
+  /**
+   * Applies BasePlugin to the project and add the tasks and extensions.
+   * @param project - Gradle Project Object
+   */
+  @Override
+  void apply(Project project) {
+    project.plugins.apply(GroovyPlugin.class)
+    project.plugins.apply(JacocoPlugin.class)
     project.plugins.apply(JavaGradlePluginPlugin.class)
+    project.plugins.apply(PublishPlugin.class)
 
-		project.dependencies.add('compile', project.dependencies.gradleApi()) // We are a plugin after all
-		project.dependencies.add('compile', project.dependencies.localGroovy())
+    project.dependencies.add('compile', project.dependencies.gradleApi()) // We are a plugin after all
+    project.dependencies.add('compile', project.dependencies.localGroovy())
     project.dependencies.add('testCompile', project.dependencies.gradleTestKit())
 
     project.repositories.jcenter()
     project.repositories.maven { url "https://plugins.gradle.org/m2/" }
-		project.buildscript.repositories.maven { url "https://plugins.gradle.org/m2/" }
+    project.buildscript.repositories.maven { url "https://plugins.gradle.org/m2/" }
 
-		if (!project.group) {
-			project.group = 'com.example'
-		}
+    if (!project.group) {
+      project.group = 'com.example'
+    }
 
-		setupSonarQube(project)
+    setupSonarQube(project)
     setupTesting(project)
     addTasks(project)
-	}
+  }
 
-  void setupTesting(Project project){
+  void setupTesting(Project project) {
     project.sourceSets {
       integTest {
         groovy.srcDir project.file('src/integTest/groovy')
@@ -84,7 +85,7 @@ public class PluginPlugin implements Plugin<Project>  {
       }
     }
 
-    project.tasks.withType(JacocoReport){
+    project.tasks.withType(JacocoReport) {
       group = 'verification'
     }
 
@@ -96,17 +97,17 @@ public class PluginPlugin implements Plugin<Project>  {
     project.integTest.finalizedBy project.jacocoCombinedTestReport
   }
 
-	static void setupSonarQube(Project project){
-		project.plugins.apply(SonarQubePlugin.class)
+  static void setupSonarQube(Project project) {
+    project.plugins.apply(SonarQubePlugin.class)
 
-		def extension = project.extensions.findByName('sonarqube')
-		extension.properties.put('sonar.jacoco.reportPath', "${project.buildDir}/jacoco/test.exec")
-		extension.properties.put('sonar.jacoco.itReportPath', "${project.buildDir}/jacoco/integTest.exec")
-	}
+    def extension = project.extensions.findByName('sonarqube')
+    extension.properties.put('sonar.jacoco.reportPath', "${project.buildDir}/jacoco/test.exec")
+    extension.properties.put('sonar.jacoco.itReportPath', "${project.buildDir}/jacoco/integTest.exec")
+  }
 
-  static void addTasks(Project project){
+  static void addTasks(Project project) {
 
-    project.task(SETUP_PLUGIN_TASK, type: SetupPluginTask){
+    project.task(SETUP_PLUGIN_TASK, type: SetupPluginTask) {
       description = "Generates an example 'helloworld' plugin."
       group = 'Setup'
     }
