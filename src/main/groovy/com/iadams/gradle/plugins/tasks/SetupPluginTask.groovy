@@ -9,10 +9,11 @@ import org.gradle.api.tasks.TaskAction
 class SetupPluginTask extends DefaultTask {
 
   static final PLUGIN_DESCRIPTOR_PATH = 'src/main/resources/META-INF/gradle-plugins'
-  final PLUGIN_CLASS_PATH = "src/main/groovy/${project.group.toString().replace('.', '/')}"
 
   @TaskAction
   void setupPlugin(){
+
+    final PLUGIN_CLASS_PATH = "src/main/groovy/${project.group.toString().replace('.', '/')}"
 
     project.file(PLUGIN_DESCRIPTOR_PATH).mkdirs()
     project.file(PLUGIN_CLASS_PATH).mkdirs()

@@ -51,6 +51,19 @@ class PluginPluginIntegSpec extends TestKitBaseIntegSpec {
 
     then:
     result.task(':build').outcome == SUCCESS
-    println result.output
+  }
+
+  def "the setup plugin task uses group if set"(){
+    when:
+    buildFile << "group = 'org.other'"
+    def result = GradleRunner.create()
+        .withProjectDir(testProjectDir.root)
+        .withArguments('setupPlugin')
+        .withPluginClasspath(pluginClasspath)
+        .build()
+
+    then:
+    result.task(':setupPlugin').outcome == SUCCESS
+    file('src/main/groovy/org/other/MyPlugin.groovy').exists()
   }
 }
