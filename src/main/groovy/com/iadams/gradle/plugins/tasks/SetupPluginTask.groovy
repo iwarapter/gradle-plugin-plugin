@@ -9,18 +9,18 @@ import org.gradle.api.tasks.TaskAction
 class SetupPluginTask extends DefaultTask {
 
   static final PLUGIN_DESCRIPTOR_PATH = 'src/main/resources/META-INF/gradle-plugins'
-  static final PLUGIN_CLASS_PATH = 'src/main/groovy'
+  final PLUGIN_CLASS_PATH = "src/main/groovy/${project.group.toString().replace('.', '/')}"
 
   @TaskAction
   void setupPlugin(){
 
     project.file(PLUGIN_DESCRIPTOR_PATH).mkdirs()
-    project.file("${PLUGIN_CLASS_PATH}/${project.group}").mkdirs()
+    project.file(PLUGIN_CLASS_PATH).mkdirs()
 
     def pluginDescriptor = project.file("${PLUGIN_DESCRIPTOR_PATH}/${project.group}.${project.name}.properties")
     pluginDescriptor << "implementation-class=${project.group}.MyPlugin"
 
-    def pluginClass = project.file("${PLUGIN_CLASS_PATH}/${project.group}/MyPlugin.groovy")
+    def pluginClass = project.file("${PLUGIN_CLASS_PATH}/MyPlugin.groovy")
     pluginClass << """package ${project.group}
 
                       import org.gradle.api.Plugin
@@ -31,7 +31,6 @@ class SetupPluginTask extends DefaultTask {
                         @Override
                         void apply(Project project) {}
 
-                      }
-                      """.stripIndent()
+                      }\n""".stripIndent()
   }
 }

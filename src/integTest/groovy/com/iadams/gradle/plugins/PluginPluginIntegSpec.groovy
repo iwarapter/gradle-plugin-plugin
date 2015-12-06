@@ -9,11 +9,11 @@ import static org.gradle.testkit.runner.TaskOutcome.SUCCESS
 class PluginPluginIntegSpec extends TestKitBaseIntegSpec {
 
   def setup() {
-    buildFile << """
+    buildFile << '''
 			plugins {
 				id 'com.iadams.gradle-plugin-plugin'
 			}
-		"""
+		'''.stripIndent()
   }
 
   def "the sonarqube task can be run"() {
