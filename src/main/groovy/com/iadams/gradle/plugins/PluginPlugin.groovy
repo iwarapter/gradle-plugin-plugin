@@ -2,6 +2,7 @@ package com.iadams.gradle.plugins
 
 import com.gradle.publish.PublishPlugin
 import com.iadams.gradle.plugins.tasks.SetupPluginTask
+import nl.javadude.gradle.plugins.license.LicensePlugin
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.GroovyPlugin
@@ -28,6 +29,9 @@ public class PluginPlugin implements Plugin<Project> {
     project.plugins.apply(JacocoPlugin.class)
     project.plugins.apply(JavaGradlePluginPlugin.class)
     project.plugins.apply(PublishPlugin.class)
+    project.plugins.apply(LicensePlugin.class)
+    def licenseExt = project.extensions.findByName('license')
+    licenseExt.includes(["**/*.java", "**/*.groovy"])
 
     project.dependencies.add('compile', project.dependencies.gradleApi()) // We are a plugin after all
     project.dependencies.add('compile', project.dependencies.localGroovy())

@@ -45,11 +45,12 @@ class PluginPluginIntegSpec extends TestKitBaseIntegSpec {
     when: 'we can then build the simple plugin'
     result = GradleRunner.create()
         .withProjectDir(testProjectDir.root)
-        .withArguments('build')
+        .withArguments('licenseFormat','build')
         .withPluginClasspath(pluginClasspath)
         .build()
 
     then:
+    result.task(':licenseFormatMain').outcome == SUCCESS
     result.task(':build').outcome == SUCCESS
   }
 

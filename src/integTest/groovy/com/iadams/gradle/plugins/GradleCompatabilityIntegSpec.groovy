@@ -11,7 +11,6 @@ class GradleCompatabilityIntegSpec extends TestKitBaseIntegSpec {
   @Unroll
   def "compatible with gradle #gradleVersion"() {
     setup:
-    writeHelloWorld('com.example')
     buildFile << """
 			plugins {
 				id 'com.iadams.gradle-plugin-plugin'
@@ -22,11 +21,12 @@ class GradleCompatabilityIntegSpec extends TestKitBaseIntegSpec {
     def result = GradleRunner.create()
         .withProjectDir(testProjectDir.root)
         .withGradleVersion(gradleVersion)
-        .withArguments('build')
+        .withArguments('setupPlugin', 'licenseFormat', 'build')
         .withPluginClasspath(pluginClasspath)
         .build()
 
     then:
+    result.task(':licenseFormatMain').outcome == SUCCESS
     result.task(':build').outcome == SUCCESS
 
     where:
