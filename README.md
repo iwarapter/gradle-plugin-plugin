@@ -3,7 +3,8 @@ Gradle Plugin Plugin
 
 This is a gradle plugin for building plugins. It saves on boiler plate build file setup and provides helpful quick start task.
 
-[![Build Status](https://travis-ci.org/iwarapter/gradle-plugin-plugin.svg)](https://travis-ci.org/iwarapter/gradle-plugin-plugin)
+[![Build Status](https://travis-ci.org/iwarapter/gradle-plugin-plugin.svg?branch=master)](https://travis-ci.org/iwarapter/gradle-plugin-plugin)
+[![Coverage Status](https://coveralls.io/repos/iwarapter/gradle-plugin-plugin/badge.svg?branch=master&service=github)](https://coveralls.io/github/iwarapter/gradle-plugin-plugin?branch=master)
 
 Usage
 -----------

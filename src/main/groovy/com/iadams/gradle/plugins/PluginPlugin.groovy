@@ -92,6 +92,11 @@ public class PluginPlugin implements Plugin<Project> {
       reports.html.destination = project.file("${project.buildDir}/reports/integ")
     }
 
+    project.jacocoTestReport {
+      reports {
+        xml.enabled = true
+      }
+    }
 
     project.task('jacocoIntegTestReport', type: JacocoReport) {
       sourceSets project.sourceSets.main

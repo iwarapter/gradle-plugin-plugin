@@ -156,4 +156,48 @@ class BuildLogicFunctionalTest extends Specification {
     file('build/test-results/TEST-com.example.ExampleIntegSpec.xml').exists()
     result.task(':integTest').outcome == SUCCESS
   }
+
+  //
+  def "we can run an unit test"() {
+    when:
+    buildFile << '''dependencies {
+  testCompile 'org.spockframework:spock-core:1.0-groovy-2.4', {
+    exclude module: 'groovy-all'
+  }
+}'''
+    file('src/test/groovy/com/example/MyPluginSpec.groovy') << '''package com.example
+
+import org.gradle.api.Project
+import org.gradle.testfixtures.ProjectBuilder
+import spock.lang.Specification
+
+class MyPluginSpec extends Specification {
+
+  static final String PLUGIN_ID = 'com.example.MyPlugin'
+  Project project
+
+  def setup() {
+    project = ProjectBuilder.builder().build()
+    project.pluginManager.apply PLUGIN_ID
+  }
+  def 'apply does not throw exceptions'() {
+    when:
+    project.apply plugin: PLUGIN_ID
+
+    then:
+    noExceptionThrown()
+  }
+}'''
+
+    settingsFile << "rootProject.name = 'MyPlugin'"
+    def result = GradleRunner.create()
+        .withProjectDir(testProjectDir.root)
+        .withArguments('setupPlugin', 'licenseFormat', 'build')
+        .withPluginClasspath(pluginClasspath)
+        .build()
+
+    then:
+    result.task(':setupPlugin').outcome == SUCCESS
+    file('build/reports/jacoco/test/jacocoTestReport.xml').exists()
+  }
 }
