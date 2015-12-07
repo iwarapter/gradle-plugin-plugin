@@ -1,39 +1,18 @@
-buildscript {
-  repositories {
-    maven {
-      url "https://plugins.gradle.org/m2/"
-    }
-  }
-  dependencies {
-    classpath "com.gradle.publish:plugin-publish-plugin:0.9.2"
-  }
+plugins {
+  id "com.iadams.gradle-plugin-plugin" version "0.1"
 }
 
-apply plugin: "com.gradle.plugin-publish"
-apply plugin: 'groovy'
-apply from: "$rootDir/gradle/jacoco.gradle"
-apply from: "$rootDir/gradle/integTest.gradle"
-
-version = 0.1
+version = '0.2-SNAPSHOT'
 group = 'com.iadams.gradle.plugins'
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
-repositories {
-	jcenter()
-	maven {
-		url "https://plugins.gradle.org/m2/"
-	}
-}
 dependencies {
-	compile localGroovy()
-	compile gradleApi()
 	compile "org.sonarqube.gradle:gradle-sonarqube-plugin:1.0"
   compile "com.gradle.publish:plugin-publish-plugin:0.9.2"
   compile "gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.12.1"
 
-	testCompile gradleTestKit()
 	testCompile 'org.spockframework:spock-core:1.0-groovy-2.4', {
 		exclude module: 'groovy-all'
 	}
@@ -41,20 +20,20 @@ dependencies {
 
 // Write the plugin's classpath to a file to share with the tests
 task createClasspathManifest {
-	def outputDir = file("$buildDir/$name")
+  def outputDir = file("$buildDir/$name")
 
-	inputs.files sourceSets.main.runtimeClasspath
-	outputs.dir outputDir
+  inputs.files sourceSets.main.runtimeClasspath
+  outputs.dir outputDir
 
-	doLast {
-		outputDir.mkdirs()
-		file("$outputDir/plugin-classpath.txt").text = sourceSets.main.runtimeClasspath.join("\n")
-	}
+  doLast {
+    outputDir.mkdirs()
+    file("$outputDir/plugin-classpath.txt").text = sourceSets.main.runtimeClasspath.join("\n")
+  }
 }
 
 // Add the classpath file to the test runtime classpath
 dependencies {
-	testRuntime files(createClasspathManifest)
+  testRuntime files(createClasspathManifest)
 }
 
 pluginBundle {
