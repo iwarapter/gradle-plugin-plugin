@@ -1,10 +1,21 @@
-version = 0.1
-group = 'com.iadams.gradle.plugins'
+buildscript {
+  repositories {
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+  }
+  dependencies {
+    classpath "com.gradle.publish:plugin-publish-plugin:0.9.2"
+  }
+}
 
+apply plugin: "com.gradle.plugin-publish"
 apply plugin: 'groovy'
 apply from: "$rootDir/gradle/jacoco.gradle"
 apply from: "$rootDir/gradle/integTest.gradle"
-apply from: "$rootDir/gradle/publishing.gradle"
+
+version = 0.1
+group = 'com.iadams.gradle.plugins'
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
@@ -44,4 +55,18 @@ task createClasspathManifest {
 // Add the classpath file to the test runtime classpath
 dependencies {
 	testRuntime files(createClasspathManifest)
+}
+
+pluginBundle {
+  website = 'https://github.com/iwarapter/gradle-plugin-plugin'
+  vcsUrl = 'https://github.com/iwarapter/gradle-plugin-plugin'
+  description = 'An (opinionated) plugin for creating gradle plugins.'
+  tags = ['gradle-plugin']
+
+  plugins {
+    pluginPlugin {
+      id = 'com.iadams.gradle-plugin-plugin'
+      displayName = 'Gradle Plugin Plugin'
+    }
+  }
 }
