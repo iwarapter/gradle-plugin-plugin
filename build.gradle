@@ -1,9 +1,9 @@
 plugins {
-  id "com.iadams.gradle-plugin-plugin" version "0.1"
+  id "com.iadams.gradle-plugin-plugin" version "0.2"
   id "com.github.kt3k.coveralls" version "2.4.0x"
 }
 
-version = '0.2'
+version = '0.3-SNAPSHOT'
 group = 'com.iadams.gradle.plugins'
 
 sourceCompatibility = 1.7
@@ -19,24 +19,6 @@ dependencies {
   }
 }
 
-// Write the plugin's classpath to a file to share with the tests
-task createClasspathManifest {
-  def outputDir = file("$buildDir/$name")
-
-  inputs.files sourceSets.main.runtimeClasspath
-  outputs.dir outputDir
-
-  doLast {
-    outputDir.mkdirs()
-    file("$outputDir/plugin-classpath.txt").text = sourceSets.main.runtimeClasspath.join("\n")
-  }
-}
-
-// Add the classpath file to the test runtime classpath
-dependencies {
-  testRuntime files(createClasspathManifest)
-}
-
 pluginBundle {
   website = 'https://github.com/iwarapter/gradle-plugin-plugin'
   vcsUrl = 'https://github.com/iwarapter/gradle-plugin-plugin'
@@ -48,11 +30,5 @@ pluginBundle {
       id = 'com.iadams.gradle-plugin-plugin'
       displayName = 'Gradle Plugin Plugin'
     }
-  }
-}
-
-jacocoTestReport {
-  reports {
-    xml.enabled = true // coveralls plugin depends on xml format report
   }
 }
