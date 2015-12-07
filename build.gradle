@@ -1,5 +1,6 @@
 plugins {
   id "com.iadams.gradle-plugin-plugin" version "0.1"
+  id "com.github.kt3k.coveralls" version "2.4.0x"
 }
 
 version = '0.2-SNAPSHOT'
@@ -9,13 +10,13 @@ sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
 dependencies {
-	compile "org.sonarqube.gradle:gradle-sonarqube-plugin:1.0"
+  compile "org.sonarqube.gradle:gradle-sonarqube-plugin:1.0"
   compile "com.gradle.publish:plugin-publish-plugin:0.9.2"
   compile "gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.12.1"
 
-	testCompile 'org.spockframework:spock-core:1.0-groovy-2.4', {
-		exclude module: 'groovy-all'
-	}
+  testCompile 'org.spockframework:spock-core:1.0-groovy-2.4', {
+    exclude module: 'groovy-all'
+  }
 }
 
 // Write the plugin's classpath to a file to share with the tests

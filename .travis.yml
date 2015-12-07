@@ -1,0 +1,11 @@
+language: groovy
+
+jdk:
+  - oraclejdk7
+  - oraclejdk8
+
+script:
+  - ./gradlew build integTest coveralls
+
+before_install:
+ - chmod +x gradlew
