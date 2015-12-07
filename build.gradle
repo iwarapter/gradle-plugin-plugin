@@ -3,7 +3,7 @@ plugins {
   id "com.github.kt3k.coveralls" version "2.4.0x"
 }
 
-version = '0.2-SNAPSHOT'
+version = '0.2'
 group = 'com.iadams.gradle.plugins'
 
 sourceCompatibility = 1.7
