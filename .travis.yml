@@ -5,7 +5,10 @@ jdk:
   - oraclejdk8
 
 script:
-  - ./gradlew build integTest coveralls
+  - ./gradlew build integTest
 
 before_install:
  - chmod +x gradlew
+
+after_success:
+ - ./gradlew jacocoTestReport coveralls
